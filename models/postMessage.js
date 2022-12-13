@@ -15,9 +15,17 @@ const postSchema=mongoose.Schema({
         type:[String],
         default:[]
     },
+    trending:{
+        type:Boolean,
+        default:false
+    },
     createdAt:{
         type: Date,
         default: new Date()
+    },
+    catageory:{
+        type:String,
+        default:'Technology'
     },
 
 })

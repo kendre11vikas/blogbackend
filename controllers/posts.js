@@ -114,3 +114,16 @@ export const commentPost =async(req, res) =>{
 
 
 }
+
+export const trendingPosts = async (req, res) =>{
+    
+ try{
+     
+     const posts =await PostMessage.find({trending:true})
+   
+     res.json({data:posts})
+     
+ }catch(error){
+     res.status(404).json(message.error);
+ }  
+};
