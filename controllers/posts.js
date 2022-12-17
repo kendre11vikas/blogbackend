@@ -125,7 +125,7 @@ export const trendingPosts = async (req, res) => {
 
     res.json({ data: posts });
   } catch (error) {
-    res.status(404).json(message.error);
+    res.status(404).json({ message: error.message });
   }
 };
 
@@ -138,5 +138,17 @@ export const getPostsByCreator = async (req, res) => {
     res.json({ data: posts });
   } catch (error) {
     res.status(404).json({ message: error.message });
+  }
+};
+
+export const getPostsByCatageory = async (req, res) => {
+  const { name } = req.query;
+
+  try {
+    const posts = await PostMessage.find({ catageory: name });
+
+    res.json({ data: posts });
+  } catch (error) {
+    res.status(404).json({ message: error });
   }
 };
