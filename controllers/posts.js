@@ -19,7 +19,7 @@ export const getPosts = async (req, res) => {
     const LIMIT = 6;
     const startIndex = (Number(page) - 1) * LIMIT;
     const total = await PostMessage.countDocuments({});
-    const posts = await PostMessage.find()
+    const posts = await PostMessage.find({}, { message: 0, comments: 0 })
       .sort({ _id: -1 })
       .limit(LIMIT)
       .skip(startIndex);
@@ -39,9 +39,12 @@ export const getPostsBySearch = async (req, res) => {
   try {
     const title = new RegExp(searchQuery, "i");
 
-    const posts = await PostMessage.find({
-      $or: [{ title: title }, { tags: { $in: tags.split(",") } }],
-    });
+    const posts = await PostMessage.find(
+      {
+        $or: [{ title: title }, { tags: { $in: tags.split(",") } }],
+      },
+      { message: 0, comments: 0 }
+    );
 
     res.json({ data: posts });
   } catch (error) {
@@ -71,6 +74,7 @@ export const updatePost = async (req, res) => {
 
   if (!mongoose.Types.ObjectId.isValid(_id))
     return res.status(404).send("No post found with this id");
+
   const updatedPost = await PostMessage.findByIdAndUpdate(
     _id,
     { ...post, _id },
@@ -121,7 +125,10 @@ export const commentPost = async (req, res) => {
 
 export const trendingPosts = async (req, res) => {
   try {
-    const posts = await PostMessage.find({ trending: true });
+    const posts = await PostMessage.find(
+      { trending: true },
+      { message: 0, comments: 0 }
+    );
 
     res.json({ data: posts });
   } catch (error) {
@@ -133,7 +140,7 @@ export const getPostsByCreator = async (req, res) => {
   const { name } = req.query;
 
   try {
-    const posts = await PostMessage.find({ name });
+    const posts = await PostMessage.find({ name }, { message: 0, comments: 0 });
 
     res.json({ data: posts });
   } catch (error) {
@@ -145,7 +152,10 @@ export const getPostsByCatageory = async (req, res) => {
   const { name } = req.query;
 
   try {
-    const posts = await PostMessage.find({ catageory: name });
+    const posts = await PostMessage.find(
+      { catageory: name },
+      { message: 0, comments: 0 }
+    );
 
     res.json({ data: posts });
   } catch (error) {
